@@ -1,4 +1,4 @@
-This is a collection of graph algorithms in Haskell, currently supporting:
+This is a (toy) collection of graph algorithms in Haskell, currently supporting:
 
 (1.) representations such as:
 
@@ -21,3 +21,5 @@ This is a collection of graph algorithms in Haskell, currently supporting:
 
 Future goals: graph algorithms on the GPU (via `accelerate` library).
 Author: Andrei Schaffer, andreis@iprogramthr4iam.com
+
+The project is built with `stack`. Main functionality is in `src/Graph.hs`.Specific tests in `app/Main.hs`. QuickCheck tests in `test/Spec.hs`.
