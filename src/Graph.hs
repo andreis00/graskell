@@ -503,7 +503,7 @@ to_adj_matrix ijvs nrows = map (\i -> let ci = map (\(_,j,_) -> j) (filter (\(k,
 from_adj_matrix :: (Num a, Bits a) => [[a]] -> w -> Graph Int w
 from_adj_matrix bmatrix val = from_csr (row_offsets, col_indices, replicate num_edges val)
                           where
-                              nrows = maximum $ map length bmatrix
+                              nrows = max (maximum $ map length bmatrix) (length bmatrix)
                               square_bmatrix = [ row | i <- [0..nrows-1], let row = [ if (i<length bmatrix && j < length (bmatrix!!i)) then (bmatrix!!i)!!j else 0 | j <- [0..nrows-1]]]
                               ncols_per_row = map (\i -> length $ filter (\elem -> elem /=0) (square_bmatrix!!i)) [0..nrows-1]
                               row_offsets = scanl (+) 0 ncols_per_row
