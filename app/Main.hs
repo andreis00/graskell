@@ -31,5 +31,22 @@ assert ftest str_success str_fail = if ftest then putStrLn str_success
 
 main :: IO ()
 main = do
-         assert (shortest_path graph_test 'M' 'N' == "MBN") "shortest path Passed." "shortest path Failed." 
+         assert (shortest_path graph_test 'M' 'N' == "MBN") "shortest path Passed." "shortest path Failed."
+
+         assert (cheapest_path graph_test 'M' 'N' (+) == "MACN") "cheapest path Passed." "cheapest path Failed."
+
+         let res_contract = [('A',[('A',1),('D',2),('N',6)]),('B',[('N',105),('A',7)]),('D',[('A',7)]),('M',[('A',8),('B',9)]),('N',[])] in
+            assert (contract graph_test 'A' 'C' (+) == res_contract) "contract graph Passed." "contract graph Failed."
+
+         let res_kcores = [(2,[(3,3.01),(4,4.5),(6,6.08)]),(3,[(4,4.5),(6,6.08),(7,7.11)]),(4,[(6,6.08),(7,7.11)]),(6,[(7,7.11)]),(7,[])] in
+            assert ( k_cores' new_graph 3 (\g v -> in_degree g v + out_degree g v) == res_kcores) "k-cores Passed." "k-cores Failed."
+
+         assert (topo_sort topo_graph_t1 == [5,4,2,3,1,0]) "topological sort Passed." "topological sort Failed."
+
+         -- note: topological sort solution may not be unique;
+         --
+         let res_topsort2 = topo_sort topo_graph_t2 in 
+            assert (res_topsort2 == "efbadc" || res_topsort2 == "fabdce") "topological sort Passed." "topological sort Failed."
+
+
          putStrLn "Done!\n"
