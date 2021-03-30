@@ -497,6 +497,21 @@ to_adj_matrix :: [(Int, Int, w)] -> Int -> [[Int]]
 to_adj_matrix ijvs nrows = map (\i -> let ci = map (\(_,j,_) -> j) (filter (\(k,_,_) -> k==i) ijvs) 
                                       in map (\k -> if k `elem` ci then 1 else 0) [0..nrows-1]) [0..nrows-1]
 
+
+-- make graph from arbitrary adjacency matrix
+--
+from_adj_matrix :: (Num a, Bits a) => [[a]] -> w -> Graph Int w
+from_adj_matrix bmatrix val = from_csr (row_offsets, col_indices, replicate num_edges val)
+                          where
+                              nrows = maximum $ map length bmatrix
+                              square_bmatrix = [ row | i <- [0..nrows-1], let row = [ if (i<length bmatrix && j < length (bmatrix!!i)) then (bmatrix!!i)!!j else 0 | j <- [0..nrows-1]]]
+                              ncols_per_row = map (\i -> length $ filter (\elem -> elem /=0) (square_bmatrix!!i)) [0..nrows-1]
+                              row_offsets = scanl (+) 0 ncols_per_row
+                              col_sets = map ( \i -> filter ( \j -> (square_bmatrix!!i)!!j /=0 ) [0..nrows-1] ) [0..nrows-1]
+                              col_indices = foldr (\ls accs -> ls ++ accs) [] col_sets
+                              num_edges = length col_indices
+
+
 -- extract SCC labels from Graph
 -- Note: labels are _not_ forming 
 -- a sorted or even contiguous set
