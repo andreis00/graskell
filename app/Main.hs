@@ -22,9 +22,27 @@ topo_graph_t1 = [(0,[]), (1,[]), (2,[(3,0)]), (3,[(1,0)]), (4,[(0,0), (1,0)]), (
 -- topo sort: [5,4,2,3,1,0]
 
 topo_graph_t2 :: Graph Char Int
-topo_graph_t2 = [ ('a',[('d',1)]), ('f',[('b',1), ('a',1)]), ('b',[('d',1)]), ('d',[('c',1)]), ('e',[])] 
+topo_graph_t2 = [ ('a',[('d',1)]), ('f',[('b',1), ('a',1)]), ('b',[('d',1)]), ('d',[('c',1)]), ('e',[])]
+
+-- adjacency matrices (graphs) for testing SCC:
+--
+ma :: Matrix Int 
+ma = [[0,1,0,0,0], [1,0,1,1,0], [0,1,0,0,0], [0,0,0,0,1], [0,0,0,1,0]]
+
+mb :: Matrix Int
+mb = [[0,1,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,0,0,0]]
+
+-- add self-loops:
+--
+mb_self_loops :: Matrix Int
+mb_self_loops = [[1,1,0,0,0],[1,1,0,0,0],[1,0,1,0,0],[0,1,0,1,0],[0,0,0,0,1]]
+
+mb_3x3 :: Matrix Int
+mb_3x3 = [[1,1,0], [1,0,0], [1,0,0]]
 
 
+-- ad-hoc assertion utility:
+--
 assert :: Bool -> String -> String -> IO ()
 assert ftest str_success str_fail = if ftest then putStrLn str_success
                                     else putStrLn str_fail
@@ -47,6 +65,16 @@ main = do
          --
          let res_topsort2 = topo_sort topo_graph_t2 in 
             assert (res_topsort2 == "efbadc" || res_topsort2 == "fabdce") "topological sort Passed." "topological sort Failed."
+
+         -- strongly connected componnents (SCC) tests:
+         --
+         assert ((labels_scc . snd . strongly_cc) ma == [Just 0,Just 0,Just 0,Just 3,Just 3]) "SCC test 1 Passed." "SCC test 1 Failed."
+
+         assert ((labels_scc . snd . strongly_cc) mb == [Just 0,Just 0,Just 2,Just 3,Just 4]) "SCC test 2 Passed." "SCC test 2 Failed."
+
+         assert ((labels_scc . snd . strongly_cc) mb_self_loops == [Just 0,Just 0,Just 2,Just 3,Just 4]) "SCC test 3 Passed." "SCC test 3 Failed."
+
+         assert ((labels_scc . snd . strongly_cc) mb_3x3 == [Just 0,Just 0,Just 2]) "SCC test 4 Passed." "SCC test 4 Failed."
 
 
          putStrLn "Done!\n"
