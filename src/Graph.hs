@@ -491,12 +491,19 @@ labels_scc mcct = map (\ls -> let fs = first ls in if null fs then Nothing else 
                        ncols = length mcct
                        first ls = take 1 $ filter (\k -> ls!!k /= 0) [0..ncols-1]
 
--- extract adjacency matrix for graph:
+-- convert to adjacency matrix utility:
 --
-{-
-to_adj_matrix ::  Ord a => Graph a w -> [[Int]]
-to_adj_matrix graph = [ foldr (\(i, j, _) acc_row -> ) (replicate 0 num_vertices) lst_tri ]
-                      where
-                           lst_tri = to_coo graph
-                           num_vertices =  length graph
--}
+to_adj_matrix :: [(Int, Int, w)] -> Int -> [[Int]]
+to_adj_matrix ijvs nrows = map (\i -> let ci = map (\(_,j,_) -> j) (filter (\(k,_,_) -> k==i) ijvs) 
+                                      in map (\k -> if k `elem` ci then 1 else 0) [0..nrows-1]) [0..nrows-1]
+
+-- extract SCC labels from Graph
+-- Note: labels are _not_ forming 
+-- a sorted or even contiguous set
+--
+labels_scc' :: (Num a, Eq a, Ord a) => Graph a w -> [Maybe Int]
+labels_scc' graph = labels_scc graph_matrix
+                    where
+                        graph_coo = to_coo graph
+                        graph_matrix = to_adj_matrix graph_coo nrows
+                        nrows = length graph -- TODO: check validity of adjacency list for sink vertices
