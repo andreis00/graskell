@@ -17,7 +17,7 @@ This is a (toy) collection of graph algorithms in Haskell, currently supporting:
      - graph contraction;
      - k-cores;
      - topological sort;
-     - srongly connected components;
+     - strongly connected components;
 
 Future goals: graph algorithms on the GPU (via `accelerate` library).
 Author: Andrei Schaffer, andreis@iprogramthr4iam.com
