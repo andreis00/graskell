@@ -34,6 +34,7 @@ renumber graph = foldl ( \accs (v, lps) -> accs ++ [( get_just $ M.lookup v map_
                       get_just = ( \(Just x) -> x )
 
 -- convertor to CSR format (row_offsets, column_indices, values):
+-- TODO: handle empty graphs.
 --
 to_csr :: Ord a => Graph a w -> ([Int], [Int], [w])
 to_csr graph = (row_offsets, col_indices, values)
