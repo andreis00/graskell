@@ -23,3 +23,9 @@ Future goals: graph algorithms on the GPU (via `accelerate` library).
 Author: Andrei Schaffer, andreis@iprogramthr4iam.com
 
 The project is built with `stack`. Main functionality is in `src/Graph.hs`.Specific tests in `app/Main.hs`. QuickCheck tests in `test/Spec.hs`.
+
+To build / test / run:
+
+     - $ stack build
+     - $ stack test
+     - $ stack exec graph-exe
